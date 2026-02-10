@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_mini/features/home/home_view_model.dart';
 
 import 'app.dart';
 
@@ -19,7 +20,6 @@ import 'data/repositories/todo_repository.dart';
 import 'data/repositories/notice_repository.dart';
 
 // Repositories (impl)
-import 'data/repositories_impl/auth_repository_impl.dart';
 import 'data/repositories_impl/user_repository_impl.dart';
 import 'data/repositories_impl/todo_repository_impl.dart';
 import 'data/repositories_impl/notice_repository_impl.dart';
@@ -44,10 +44,11 @@ Future<void> main() async {
         // -----------------------------
         // 2) Repository (interface -> impl)
         // -----------------------------
-        Provider<AuthRepository>(
-          create: (ctx) => AuthRepositoryImpl(
-            ctx.read<FirebaseAuthDataSource>(),
-          ),
+        ChangeNotifierProvider(
+          create: (ctx) => HomeViewModel(
+            ctx.read<AuthRepository>(),
+            ctx.read<UserRepository>(),
+          )..start(),
         ),
         Provider<UserRepository>(
           create: (ctx) => UserRepositoryImpl(
