@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_mini/features/auth/login_view_model.dart';
 import 'package:todo_mini/features/home/home_view_model.dart';
+import 'package:todo_mini/features/notices/notices_view_model.dart';
 
 import 'app.dart';
 
@@ -23,7 +24,6 @@ import 'data/repositories/notice_repository.dart';
 // Repositories (impl)
 import 'data/repositories_impl/user_repository_impl.dart';
 import 'data/repositories_impl/todo_repository_impl.dart';
-import 'data/repositories_impl/notice_repository_impl.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,9 +45,7 @@ Future<void> main() async {
           create: (_) => FirestoreDataSource(FirebaseFirestore.instance),
         ),
 
-        // -----------------------------
-        // 2) Repository (interface -> impl)
-        // -----------------------------
+
         ChangeNotifierProvider(
           create: (ctx) => HomeViewModel(
             ctx.read<AuthRepository>(),
@@ -65,10 +63,8 @@ Future<void> main() async {
             ctx.read<FirestoreDataSource>(),
           ),
         ),
-        Provider<NoticeRepository>(
-          create: (ctx) => NoticeRepositoryImpl(
-            ctx.read<FirestoreDataSource>(),
-          ),
+        ChangeNotifierProvider(
+          create: (ctx) => NoticesViewModel(ctx.read<NoticeRepository>())..start(),
         ),
       ],
       child: const App(),
