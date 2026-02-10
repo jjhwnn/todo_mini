@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../../data/models/app_user.dart';
 import '../../data/repositories/auth_repository.dart';
 
+import '../notices/notices_screen.dart';
+
 class HomePlaceholderScreen extends StatelessWidget {
   final AppUser me;
 
@@ -12,8 +14,12 @@ class HomePlaceholderScreen extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     final auth = context.read<AuthRepository>();
     await auth.signOut();
-    // 별도 네비게이션 처리는 하지 않습니다.
-    // authUidChanges() 변화 → HomeViewModel이 감지 → App이 LoginScreen으로 분기
+  }
+
+  void _openNotices(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const NoticesScreen()),
+    );
   }
 
   @override
@@ -39,10 +45,18 @@ class HomePlaceholderScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text('Role: ${me.role.name}'),
             const SizedBox(height: 16),
-            const Text(
-              'Logout 버튼 클릭 시 AuthRepository.signOut 호출 →\n'
-              'HomeViewModel이 authUidChanges()로 감지하여 로그인 화면으로 분기됩니다.',
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                key: const Key('btn_open_notices'),
+                onPressed: () => _openNotices(context),
+                child: const Text('공지사항 보기'),
+              ),
             ),
+
+            const SizedBox(height: 16),
+            const Text('Notices 기능이 연결되었습니다.'),
           ],
         ),
       ),
