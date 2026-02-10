@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_mini/features/admin/admin_screen.dart';
 import 'package:todo_mini/features/todos/my_todos_screen.dart';
 
 import '../../data/models/app_user.dart';
@@ -68,6 +69,22 @@ class HomePlaceholderScreen extends StatelessWidget {
                 child: const Text('내 할 일 보기'),
               ),
             ),
+
+            if (me.role == UserRole.admin) ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  key: const Key('btn_open_admin'),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const AdminScreen()),
+                    );
+                  },
+                  child: const Text('관리자 화면'),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 16),
             const Text('Notices 기능이 연결되었습니다.'),
