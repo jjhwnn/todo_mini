@@ -5,7 +5,7 @@ class FirebaseAuthDataSource {
   final FirebaseAuth _auth;
 
   // v7+ : 생성자 대신 싱글톤 instance 사용
-  final GoogleSignIn _googleSignIn;
+ GoogleSignIn? _googleSignIn;
 
   // v7+ : initialize가 비동기라, 1회만 보장하기 위해 플래그 둠
   bool _googleInitialized = false;
@@ -23,6 +23,9 @@ class FirebaseAuthDataSource {
         _clientId = clientId,
         _serverClientId = serverClientId;
 
+  GoogleSignIn get _gs => _googleSignIn ??= GoogleSignIn.instance; // ✅ 필요할 때만
+
+
   Stream<User?> authStateChanges() => _auth.authStateChanges();
   User? get currentUser => _auth.currentUser;
 
@@ -36,7 +39,7 @@ class FirebaseAuthDataSource {
 
   Future<void> _ensureGoogleInitialized() async {
     if (_googleInitialized) return;
-    await _googleSignIn.initialize(
+    await _gs.initialize(
       clientId: _clientId,
       serverClientId: _serverClientId,
     );
@@ -53,7 +56,7 @@ class FirebaseAuthDataSource {
     await _ensureGoogleInitialized();
 
     // v7: signIn() 없음 -> authenticate()
-    final account = await _googleSignIn.authenticate(scopeHint: scopeHint);
+    final account = await _gs.authenticate(scopeHint: scopeHint);
 
     final idToken = account.authentication.idToken;
     if (idToken == null) {
@@ -69,7 +72,7 @@ class FirebaseAuthDataSource {
     await _auth.signOut();
     // google_sign_in v7: signOut 메서드 존재 :contentReference[oaicite:3]{index=3}
     try {
-      await _googleSignIn.signOut();
+      await _gs.signOut();
     } catch (_) {}
   }
 }
