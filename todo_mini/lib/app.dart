@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_mini/features/auth/login_screen.dart';
 
 import 'core/ui/widgets/loading_view.dart';
-import 'core/ui/widgets/error_view.dart';
 
 import 'features/home/home_view_model.dart';
 import 'features/home/home_placeholder_screen.dart';
@@ -24,15 +24,13 @@ class App extends StatelessWidget {
             return HomePlaceholderScreen(me: vm.meState.data!);
           }
 
-          // 에러 상태(로그인 필요 포함)
-          return Scaffold(
-            body: ErrorView(
-              title: '로그인이 필요합니다',
-              description: vm.meState.message,
-              // 로그인 화면이 아직 placeholder라 retry는 start() 재호출 정도만 제공
-              onRetry: vm.start,
-            ),
-          );
+          // 로그인된 상태면 홈(임시)
+          if (vm.meState.isSuccess) {
+            return HomePlaceholderScreen(me: vm.meState.data!);
+          }
+
+          // 로그인 필요(또는 인증 관련 에러)면 로그인 화면
+          return const LoginScreen();
         },
       ),
     );
