@@ -44,6 +44,17 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>com.googleusercontent.apps.여기에_REVERSED_CLIENT_ID_그대로</string>
+		</array>
+	</dict>
+	</array>
 	<true/>
 </dict>
 </plist>
